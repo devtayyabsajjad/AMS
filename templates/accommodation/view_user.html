@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}User Details - AMS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <a href="{% url 'manage_users' %}" class="btn btn-outline" style="margin-bottom: 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to Users
+    </a>
+    
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 2rem;">
+        <div class="card">
+            <div class="card-body">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2.5rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ user_obj.get_full_name|default:user_obj.username }}</h2>
+                    <span class="badge {% if user_obj.role == 'admin' %}badge-primary{% else %}badge-secondary{% endif %}">
+                        {{ user_obj.role|title }}
+                    </span>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <strong><i class="fas fa-envelope"></i> Email:</strong><br>
+                        <a href="mailto:{{ user_obj.email }}" style="color: var(--primary);">{{ user_obj.email }}</a>
+                    </div>
+                    {% if user_obj.phone %}
+                    <div>
+                        <strong><i class="fas fa-phone"></i> Phone:</strong><br>
+                        <a href="tel:{{ user_obj.phone }}" style="color: var(--primary);">{{ user_obj.phone }}</a>
+                    </div>
+                    {% endif %}
+                    {% if user_obj.religious_preference %}
+                    <div>
+                        <strong><i class="fas fa-pray"></i> Religious Preference:</strong><br>
+                        <span class="badge badge-outline">{{ user_obj.religious_preference }}</span>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <strong><i class="fas fa-calendar"></i> Joined:</strong><br>
+                        <span style="color: var(--gray);">{{ user_obj.date_joined|date:"F d, Y" }}</span>
+                    </div>
+                    <div>
+                        <strong><i class="fas fa-check-circle"></i> Status:</strong><br>
+                        <span class="badge {% if user_obj.is_active %}badge-success{% else %}badge-danger{% endif %}">
+                            {% if user_obj.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="{% url 'edit_user' user_obj.id %}" class="btn btn-primary" style="text-decoration: none;">
+                        <i class="fas fa-edit"></i> Edit User
+                    </a>
+                    {% if user_obj != request.user %}
+                    <a href="{% url 'delete_user' user_obj.id %}" class="btn btn-danger" style="text-decoration: none;">
+                        <i class="fas fa-trash"></i> Delete User
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-alt"></i> Applications ({{ applications.count }})
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for application in applications %}
+                        <div style="border: 1px solid var(--gray-light); border-radius: 0.5rem; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">{{ application.accommodation.title }}</h4>
+                                    <p style="color: var(--gray); font-size: 0.9rem;">{{ application.accommodation.location }}</p>
+                                </div>
+                                <span class="badge {% if application.status == 'Approved' %}badge-success{% elif application.status == 'Rejected' %}badge-danger{% else %}badge-warning{% endif %}">
+                                    {{ application.status }}
+                                </span>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 0.5rem;">
+                                <strong>Message:</strong> {{ application.message|truncatewords:20 }}
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.75rem; color: var(--gray);">
+                                    {{ application.created_at|date:"M d, Y" }}
+                                </span>
+                                <a href="{% url 'view_application' application.id %}" class="btn btn-outline btn-sm" style="text-decoration: none;">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: var(--gray); padding: 2rem;">No applications yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

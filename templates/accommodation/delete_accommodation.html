@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Accommodation - AMS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px;">
+    <div class="card">
+        <div class="card-header">
+            <h1 style="font-size: 1.75rem; color: var(--danger);">
+                <i class="fas fa-exclamation-triangle"></i> Delete Accommodation
+            </h1>
+        </div>
+        
+        <div class="card-body">
+            <p style="margin-bottom: 1rem;">Are you sure you want to delete this accommodation?</p>
+            <div style="background: var(--light); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 0.5rem;">{{ accommodation.title }}</h3>
+                <p style="color: var(--gray); margin-bottom: 0.5rem;">{{ accommodation.location }}</p>
+                <p style="color: var(--gray);">${{ accommodation.price }}/month</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

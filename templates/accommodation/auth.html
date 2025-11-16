@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if mode == 'login' %}Login{% else %}Sign Up{% endif %} - AMS{% endblock %}
+
+{% block content %}
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 0;">
+    <div class="card" style="max-width: 450px; width: 100%; margin: 0 auto;">
+        <div class="card-header text-center">
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">
+                <i class="fas fa-home" style="color: var(--primary);"></i> AMS - Accommodation Management System
+            </h1>
+            <p style="color: var(--gray);">{% if mode == 'login' %}Sign in to your account{% else %}Create a new account{% endif %}</p>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--gray-light);">
+                <a href="{% url 'auth_login' %}" 
+                   style="flex: 1; padding: 0.75rem; text-align: center; text-decoration: none; color: {% if mode == 'login' %}var(--primary){% else %}var(--gray){% endif %}; font-weight: {% if mode == 'login' %}600{% else %}400{% endif %}; border-bottom: {% if mode == 'login' %}3px solid var(--primary){% else %}none{% endif %}; margin-bottom: -2px;">
+                    Login
+                </a>
+                <a href="{% url 'auth_signup' %}" 
+                   style="flex: 1; padding: 0.75rem; text-align: center; text-decoration: none; color: {% if mode == 'signup' %}var(--primary){% else %}var(--gray){% endif %}; font-weight: {% if mode == 'signup' %}600{% else %}400{% endif %}; border-bottom: {% if mode == 'signup' %}3px solid var(--primary){% else %}none{% endif %}; margin-bottom: -2px;">
+                    Sign Up
+                </a>
+            </div>
+            
+            {% if mode == 'login' %}
+            <form method="post" action="{% url 'auth_login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input type="email" name="email" class="form-control" placeholder="admin@accommodation.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'auth_signup' %}">
+                {% csrf_token %}
+                {% if form.errors %}
+                <div class="alert alert-error">
+                    <strong>Please correct the errors below:</strong>
+                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user-circle"></i> Username
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <small style="color: var(--danger);">{{ form.username.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <small style="color: var(--danger);">{{ form.email.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> First Name
+                    </label>
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> Last Name
+                    </label>
+                    {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-phone"></i> Phone
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <small style="color: var(--danger);">{{ form.phone.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-pray"></i> Religious Preference
+                    </label>
+                    {{ form.religious_preference }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <small style="color: var(--danger);">{{ form.password1.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Confirm Password
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <small style="color: var(--danger);">{{ form.password2.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

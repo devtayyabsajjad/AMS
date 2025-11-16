@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}My Applications - AMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-timeline {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: var(--light);
+        border-radius: 0.5rem;
+    }
+    
+    .timeline-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+    
+    .timeline-dot {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-size: 1.25rem;
+        transition: all 0.3s;
+    }
+    
+    .timeline-dot.active {
+        background: var(--success);
+        color: white;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        animation: pulse 2s infinite;
+    }
+    
+    .timeline-dot.pending {
+        background: var(--warning);
+        color: white;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+    }
+    
+    .timeline-dot.inactive {
+        background: var(--gray-light);
+        color: var(--gray);
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 1.5rem; padding: 3rem 2rem; margin-bottom: 2rem; color: white; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">
+            <i class="fas fa-clipboard-list"></i> My Applications
+        </h1>
+        <p style="font-size: 1.1rem; opacity: 0.95;">Track the status of your accommodation applications</p>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="grid grid-4" style="margin-bottom: 2rem;">
+        <div class="card" style="text-align: center; border-left: 4px solid var(--info);">
+            <div class="card-body">
+                <i class="fas fa-inbox" style="font-size: 2.5rem; color: var(--info); margin-bottom: 0.5rem;"></i>
+                <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">{{ total_count }}</h3>
+                <p style="color: var(--gray); font-weight: 600;">Total Applications</p>
+            </div>
+        </div>
+        
+        <div class="card" style="text-align: center; border-left: 4px solid var(--warning);">
+            <div class="card-body">
+                <i class="fas fa-hourglass-half" style="font-size: 2.5rem; color: var(--warning); margin-bottom: 0.5rem;"></i>
+                <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">{{ pending_count }}</h3>
+                <p style="color: var(--gray); font-weight: 600;">Pending Review</p>
+            </div>
+        </div>
+        
+        <div class="card" style="text-align: center; border-left: 4px solid var(--success);">
+            <div class="card-body">
+                <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--success); margin-bottom: 0.5rem;"></i>
+                <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">{{ approved_count }}</h3>
+                <p style="color: var(--gray); font-weight: 600;">Approved</p>
+            </div>
+        </div>
+        
+        <div class="card" style="text-align: center; border-left: 4px solid var(--danger);">
+            <div class="card-body">
+                <i class="fas fa-times-circle" style="font-size: 2.5rem; color: var(--danger); margin-bottom: 0.5rem;"></i>
+                <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">{{ rejected_count }}</h3>
+                <p style="color: var(--gray); font-weight: 600;">Rejected</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Applications List -->
+    <div class="card">
+        <div class="card-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 1.5rem; font-weight: 700;">
+                    <i class="fas fa-file-alt"></i> Application History
+                </h2>
+                <a href="{% url 'accommodations' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Apply for More
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if applications %}
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    {% for application in applications %}
+                    <div class="card" style="border: 2px solid var(--gray-light);">
+                        <div class="card-body">
+                            <!-- Application Header -->
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                <div>
+                                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                        {{ application.accommodation.title }}
+                                    </h3>
+                                    <p style="color: var(--gray); margin-bottom: 0.5rem;">
+                                        <i class="fas fa-map-marker-alt"></i> {{ application.accommodation.location }}
+                                    </p>
+                                    <span class="badge {% if application.status == 'Approved' %}badge-success{% elif application.status == 'Rejected' %}badge-danger{% else %}badge-warning{% endif %}">
+                                        <i class="fas {% if application.status == 'Approved' %}fa-check{% elif application.status == 'Rejected' %}fa-times{% else %}fa-clock{% endif %}"></i>
+                                        {{ application.status }}
+                                    </span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem;">
+                                        <i class="fas fa-calendar"></i> Applied {{ application.created_at|date:"M d, Y" }}
+                                    </div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                                        ${{ application.accommodation.price }}/month
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Status Timeline -->
+                            <div class="status-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot active">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </div>
+                                    <div style="font-size: 0.875rem; font-weight: 600;">Submitted</div>
+                                </div>
+                                <div style="flex: 1; height: 2px; background: {% if application.status != 'Pending' %}var(--success){% else %}var(--gray-light){% endif %};"></div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot {% if application.status != 'Pending' %}active{% else %}pending{% endif %}">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div style="font-size: 0.875rem; font-weight: 600;">Under Review</div>
+                                </div>
+                                <div style="flex: 1; height: 2px; background: {% if application.status != 'Pending' %}var(--success){% else %}var(--gray-light){% endif %};"></div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot {% if application.status == 'Approved' %}active{% elif application.status == 'Rejected' %}active{% else %}inactive{% endif %}" style="{% if application.status == 'Rejected' %}background: var(--danger);{% endif %}">
+                                        <i class="fas {% if application.status == 'Approved' %}fa-check{% elif application.status == 'Rejected' %}fa-times{% else %}fa-flag-checkered{% endif %}"></i>
+                                    </div>
+                                    <div style="font-size: 0.875rem; font-weight: 600;">{{ application.status }}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Application Details -->
+                            <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Your Message:</h4>
+                                <p style="color: var(--gray); line-height: 1.6;">{{ application.message|truncatewords:30 }}</p>
+                            </div>
+                            
+                            <!-- Accommodation Details -->
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-light);">
+                                <div>
+                                    <i class="fas fa-bed" style="color: var(--primary);"></i>
+                                    <strong>Type:</strong> {{ application.accommodation.type }}
+                                </div>
+                                <div>
+                                    <i class="fas fa-praying-hands" style="color: var(--primary);"></i>
+                                    <strong>Preference:</strong> {{ application.accommodation.religious_preference }}
+                                </div>
+                                <div>
+                                    <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                                    <strong>Status:</strong> {{ application.accommodation.status }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <i class="fas fa-inbox" style="font-size: 5rem; color: var(--gray-light); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; color: var(--gray); margin-bottom: 1rem;">No Applications Yet</h3>
+                    <p style="color: var(--gray); margin-bottom: 2rem;">You haven't applied to any accommodations. Start browsing and find your perfect home!</p>
+                    <a href="{% url 'accommodations' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Browse Accommodations
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

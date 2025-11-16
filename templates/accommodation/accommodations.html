@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Accommodations - AMS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow);">
+        <h1 style="font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-search" style="color: var(--primary);"></i>
+            Find Accommodation
+        </h1>
+        
+        <form method="get" action="{% url 'accommodations' %}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Religious Preference</label>
+                <select name="religious_preference" class="form-control">
+                    <option value="">Any</option>
+                    <option value="Muslim" {% if religious_filter == 'Muslim' %}selected{% endif %}>Muslim</option>
+                    <option value="Hindu" {% if religious_filter == 'Hindu' %}selected{% endif %}>Hindu</option>
+                    <option value="Christian" {% if religious_filter == 'Christian' %}selected{% endif %}>Christian</option>
+                    <option value="Other" {% if religious_filter == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Accommodation Type</label>
+                <select name="type" class="form-control">
+                    <option value="">All Types</option>
+                    <option value="Apartment" {% if type_filter == 'Apartment' %}selected{% endif %}>Apartment</option>
+                    <option value="House" {% if type_filter == 'House' %}selected{% endif %}>House</option>
+                    <option value="Room" {% if type_filter == 'Room' %}selected{% endif %}>Room</option>
+                    <option value="Studio" {% if type_filter == 'Studio' %}selected{% endif %}>Studio</option>
+                    <option value="Shared" {% if type_filter == 'Shared' %}selected{% endif %}>Shared</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Location</label>
+                <input type="text" name="location" class="form-control" placeholder="Search location..." value="{{ location_search }}">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0; display: flex; align-items: flex-end;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    {% if accommodations %}
+    <div class="grid grid-3">
+        {% for accommodation in accommodations %}
+        <div class="card">
+            <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <span class="badge {% if accommodation.status == 'Available' %}badge-success{% else %}badge-secondary{% endif %}">
+                            {{ accommodation.status }}
+                        </span>
+                        <span class="badge badge-outline">{{ accommodation.religious_preference }}</span>
+                    </div>
+                    <span class="badge badge-primary">{{ accommodation.type }}</span>
+                </div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">{{ accommodation.title }}</h3>
+                <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.5;">{{ accommodation.description|truncatewords:20 }}</p>
+            </div>
+            
+            <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--gray);">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ accommodation.location }}</span>
+                </div>
+                
+                <div style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-bed" style="color: var(--gray);"></i>
+                        <span>{{ accommodation.bedrooms }} Beds</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-bath" style="color: var(--gray);"></i>
+                        <span>{{ accommodation.bathrooms }} Baths</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                    <i class="fas fa-dollar-sign" style="color: var(--primary); font-size: 1.25rem;"></i>
+                    <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${{ accommodation.price }}/month</span>
+                </div>
+                
+                {% if accommodation.amenities %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                    {% for amenity in accommodation.amenities|slice:":3" %}
+                    <span class="badge badge-outline" style="font-size: 0.75rem;">{{ amenity }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="card-footer" style="display: flex; gap: 0.5rem;">
+                <a href="{% url 'apply_accommodation' accommodation.id %}" 
+                   class="btn btn-primary" 
+                   style="flex: 1; text-align: center; {% if accommodation.status != 'Available' %}opacity: 0.5; pointer-events: none;{% endif %}">
+                    <i class="fas fa-paper-plane"></i> Apply Now
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 4rem 2rem;">
+        <i class="fas fa-home" style="font-size: 4rem; color: var(--gray); margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No accommodations found</h3>
+        <p style="color: var(--gray);">Try adjusting your filters</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Application Details - AMS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline" style="margin-bottom: 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+    
+    <div class="card">
+        <div class="card-header">
+            <h1 style="font-size: 1.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-file-alt"></i> Application Details
+            </h1>
+        </div>
+        
+        <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: var(--light); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">
+                        <i class="fas fa-user"></i> Applicant Information
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div>
+                            <strong>Name:</strong><br>
+                            <span style="color: var(--gray);">{{ application.user_name }}</span>
+                        </div>
+                        <div>
+                            <strong>Email:</strong><br>
+                            <a href="mailto:{{ application.user_email }}" style="color: var(--primary); text-decoration: none;">
+                                <i class="fas fa-envelope"></i> {{ application.user_email }}
+                            </a>
+                        </div>
+                        <div>
+                            <strong>Phone:</strong><br>
+                            <a href="tel:{{ application.user_phone }}" style="color: var(--primary); text-decoration: none;">
+                                <i class="fas fa-phone"></i> {{ application.user_phone }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--light); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">
+                        <i class="fas fa-home"></i> Accommodation Details
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div>
+                            <strong>Title:</strong><br>
+                            <span style="color: var(--gray);">{{ application.accommodation.title }}</span>
+                        </div>
+                        <div>
+                            <strong>Location:</strong><br>
+                            <span style="color: var(--gray);">{{ application.accommodation.location }}</span>
+                        </div>
+                        <div>
+                            <strong>Price:</strong><br>
+                            <span style="color: var(--gray);">${{ application.accommodation.price }}/month</span>
+                        </div>
+                        <div>
+                            <strong>Type:</strong><br>
+                            <span class="badge badge-outline">{{ application.accommodation.type }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--light); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">
+                    <i class="fas fa-comment"></i> Message from Applicant
+                </h3>
+                <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--primary);">
+                    <p style="line-height: 1.8; color: var(--dark); white-space: pre-wrap;">{{ application.message }}</p>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: var(--light); border-radius: 0.5rem; margin-bottom: 2rem;">
+                <div>
+                    <strong>Status:</strong>
+                    <span class="badge {% if application.status == 'Approved' %}badge-success{% elif application.status == 'Rejected' %}badge-danger{% else %}badge-warning{% endif %}" style="margin-left: 0.5rem;">
+                        {{ application.status }}
+                    </span>
+                </div>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <i class="fas fa-calendar"></i> Applied on {{ application.created_at|date:"F d, Y at H:i" }}
+                </div>
+            </div>
+            
+            {% if application.status == 'Pending' %}
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <form method="post" action="{% url 'update_application_status' application.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="Approved">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Approve Application
+                    </button>
+                </form>
+                <form method="post" action="{% url 'update_application_status' application.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="Rejected">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times"></i> Reject Application
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

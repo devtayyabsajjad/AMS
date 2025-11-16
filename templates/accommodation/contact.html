@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - AMS{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+    <div class="container">
+        <i class="fas fa-envelope" style="font-size: 5rem; margin-bottom: 1rem; text-shadow: 0 4px 6px rgba(0,0,0,0.2);"></i>
+        <h1 style="font-size: 4rem;">Get In Touch</h1>
+        <p style="font-size: 1.35rem;">We'd love to hear from you. Send us a message and we'll respond within 24 hours.</p>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<section style="padding: 4rem 0;">
+    <div class="container">
+        <div class="grid grid-2" style="gap: 3rem; align-items: start;">
+            <!-- Contact Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 style="font-size: 1.75rem; font-weight: 700;">
+                        <i class="fas fa-paper-plane"></i> Send Us a Message
+                    </h2>
+                    <p style="color: var(--gray); margin-top: 0.5rem;">Fill out the form below and we'll get back to you shortly</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user"></i> Your Name *
+                            </label>
+                            <input type="text" id="name" name="name" class="form-control" required placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address *
+                            </label>
+                            <input type="email" id="email" name="email" class="form-control" required placeholder="john@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">
+                                <i class="fas fa-tag"></i> Subject *
+                            </label>
+                            <input type="text" id="subject" name="subject" class="form-control" required placeholder="How can we help?">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">
+                                <i class="fas fa-comment"></i> Message *
+                            </label>
+                            <textarea id="message" name="message" class="form-control" rows="6" required placeholder="Tell us more about your inquiry..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div>
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.5rem; font-weight: 700;">
+                            <i class="fas fa-info-circle"></i> Contact Information
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <!-- Email -->
+                            <div style="display: flex; gap: 1rem; align-items: start;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--dark);">Email Us</h4>
+                                    <p style="color: var(--gray); margin-bottom: 0.25rem;">support@ams.com</p>
+                                    <p style="color: var(--gray); font-size: 0.875rem;">We'll respond within 24 hours</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div style="display: flex; gap: 1rem; align-items: start;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--dark);">Call Us</h4>
+                                    <p style="color: var(--gray); margin-bottom: 0.25rem;">+1 (800) AMS-HELP</p>
+                                    <p style="color: var(--gray); font-size: 0.875rem;">Mon-Fri, 9AM - 6PM EST</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Location -->
+                            <div style="display: flex; gap: 1rem; align-items: start;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--dark);">Visit Us</h4>
+                                    <p style="color: var(--gray); margin-bottom: 0.25rem;">123 Housing Street</p>
+                                    <p style="color: var(--gray); font-size: 0.875rem;">City, State 12345</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Office Hours -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.5rem; font-weight: 700;">
+                            <i class="fas fa-clock"></i> Office Hours
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--light); border-radius: 0.5rem;">
+                                <span style="font-weight: 600; color: var(--dark);">Monday - Friday</span>
+                                <span style="color: var(--gray);">9:00 AM - 6:00 PM</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--light); border-radius: 0.5rem;">
+                                <span style="font-weight: 600; color: var(--dark);">Saturday</span>
+                                <span style="color: var(--gray);">10:00 AM - 4:00 PM</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.75rem; background: var(--light); border-radius: 0.5rem;">
+                                <span style="font-weight: 600; color: var(--dark);">Sunday</span>
+                                <span style="color: var(--danger);">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section style="background: white; padding: 4rem 0;">
+    <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; color: var(--dark); margin-bottom: 3rem;">
+            <i class="fas fa-question-circle"></i> Frequently Asked Questions
+        </h2>
+        <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="card">
+                <div class="card-body">
+                    <h4 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
+                        How do I apply for an accommodation?
+                    </h4>
+                    <p style="color: var(--gray); line-height: 1.8;">
+                        Simply browse our listings, select the accommodation that interests you, and click the "Apply" button. Fill out the application form with your details and submit it. The landlord will review your application and get back to you.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
+                        Is the platform free to use?
+                    </h4>
+                    <p style="color: var(--gray); line-height: 1.8;">
+                        Yes! Harmony Housing is completely free for tenants to use. You can browse listings, apply to accommodations, and track your applications without any charges.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
+                        How long does it take to hear back from landlords?
+                    </h4>
+                    <p style="color: var(--gray); line-height: 1.8;">
+                        Response times vary by landlord, but most respond within 24-48 hours. You can track the status of your application in your dashboard and will be notified when there's an update.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h4 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">
+                        Can I modify or cancel my application?
+                    </h4>
+                    <p style="color: var(--gray); line-height: 1.8;">
+                        Once submitted, applications cannot be edited, but you can contact support if you need to make changes or withdraw your application. We recommend reaching out to us as soon as possible.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
