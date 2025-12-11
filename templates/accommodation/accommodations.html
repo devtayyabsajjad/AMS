@@ -97,11 +97,26 @@
             </div>
             
             <div class="card-footer" style="display: flex; gap: 0.5rem;">
-                <a href="{% url 'apply_accommodation' accommodation.id %}" 
-                   class="btn btn-primary" 
-                   style="flex: 1; text-align: center; {% if accommodation.status != 'Available' %}opacity: 0.5; pointer-events: none;{% endif %}">
-                    <i class="fas fa-paper-plane"></i> Apply Now
-                </a>
+                {% if user.role == 'admin' %}
+                    <!-- Admin sees Edit button instead of Apply -->
+                    <a href="{% url 'edit_accommodation' accommodation.id %}" 
+                       class="btn btn-primary" 
+                       style="flex: 1; text-align: center;">
+                        <i class="fas fa-edit"></i> Edit Listing
+                    </a>
+                    <a href="{% url 'admin_dashboard' %}" 
+                       class="btn btn-outline" 
+                       style="text-align: center;">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </a>
+                {% else %}
+                    <!-- Regular users see Apply button -->
+                    <a href="{% url 'apply_accommodation' accommodation.id %}" 
+                       class="btn btn-primary" 
+                       style="flex: 1; text-align: center; {% if accommodation.status != 'Available' %}opacity: 0.5; pointer-events: none;{% endif %}">
+                        <i class="fas fa-paper-plane"></i> Apply Now
+                    </a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

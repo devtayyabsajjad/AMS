@@ -67,8 +67,8 @@ WSGI_APPLICATION = 'harmony_housing.wsgi.application'
 
 # Database - Using Supabase (PostgreSQL) or SQLite for local development
 # To use Supabase, set USE_SUPABASE=True in .env and configure DB_* variables
-# Default to True if DB_HOST is set (indicating Supabase is configured)
-USE_SUPABASE = env.bool('USE_SUPABASE', default=bool(env('DB_HOST', default='')))
+# Default to False for local development (use SQLite)
+USE_SUPABASE = env.bool('USE_SUPABASE', default=False)
 
 if USE_SUPABASE:
     # Supabase PostgreSQL Configuration (Transaction Pooler)
@@ -151,5 +151,16 @@ LOGOUT_REDIRECT_URL = '/'
 CSRF_TRUSTED_ORIGINS = [
     'https://*.vercel.app',
     'https://*.now.sh',
+    'https://*.railway.app',
+    'https://*.onrender.com',
 ]
 
+# Production Security Settings (only apply when DEBUG is False)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

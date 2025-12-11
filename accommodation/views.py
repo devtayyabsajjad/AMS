@@ -122,6 +122,11 @@ def my_applications(request):
 @login_required
 def apply_accommodation(request, accommodation_id):
     """Apply for accommodation"""
+    # Prevent admin users from applying - they should only manage accommodations
+    if request.user.role == 'admin':
+        messages.error(request, 'Administrators cannot apply for accommodations. Please use the Admin Dashboard to manage listings.')
+        return redirect('admin_dashboard')
+    
     accommodation = get_object_or_404(Accommodation, id=accommodation_id)
     
     if request.method == 'POST':

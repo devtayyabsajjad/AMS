@@ -2,11 +2,7 @@
 ## Complete Project Documentation
 ### Research Project Documentation
 
-**Project Type:** MSc Research Project - Information Technology with Data Analytics  
-**Version:** 1.0.0  
-**Last Updated:** January 2025  
-**Author:** Tayyab Sajjad  
-**Institution:** [Your University Name]  
+
 
 ---
 
